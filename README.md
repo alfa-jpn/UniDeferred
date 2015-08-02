@@ -1,7 +1,7 @@
 # UniDeferred
-JQuery like AsyncLibrary for Unity. This library provide a very ultra super easy async functions.
+JQuery.Deferred-like AsyncLibrary for Unity. This library provide a very ultra super easy async functions.
 
-### Example
+## Example
 
 #### super simply www example.
 
@@ -54,3 +54,32 @@ IEnumerator loop(IDeferred d) {
     d.Resolve(cnt);
 }
 ```
+
+### serial execution
+```CSharp
+void Start () {
+  // Call next action, When A Resolved.
+  Deferred.Defer<Int32>((DeferredCoroutine)CoroutineA).Done(p => {
+    Debug.Log("A: Resolved");
+  }).Fail(p => {
+    Debug.Log("A: Rejected");
+  }).Next<Int32>((DeferredCoroutine)CoroutineA).Done(p => {
+    Debug.Log("B: Resolved");
+  }).Fail(p => {
+    Debug.Log("B: Rejected");
+  });
+}
+
+IEnumerator CoroutineA(IDeferred d) {
+  yield return null;
+  d.Resolve(1);
+}
+
+IEnumerator CoroutineB(IDeferred d) {
+  yield return null;
+  d.Resolve(2);
+}
+```
+
+## License
+This library is released under the MIT license.
